@@ -1,67 +1,83 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import axios from 'axios'
-
-
-
+import React, { Component } from "react";
+//import logo from './logo.svg';
+import "./App.css";
+import axios from "axios";
+import { Switch, Route, Link } from "react-router-dom";
+import HomePage from "./components/home-page";
+import Beers from "./components/beers";
+import RandomBeer from "./components/random-beer";
+import NewBeer from "./components/new-beer";
+import Header from "./components/Header";
 
 class App extends Component {
-
   state = {
-    beers: [], //fill this array of beers with beers from the api 
-    dogs : []
+    allBeers: []
+  };
+
+  componentDidMount() {
+    //to get axios
+    this.getAllTheBeers();
   }
-
-  async componentDidMount(){
-    //console.log('happens once on mount')
-
-
-    //.then promise 
-    axios.get(`https://ih-beers-api2.herokuapp.com/beers/`).then(res => { //This takes some time by the time it gets back 
-        this.setState({
-          beers:res.data 
-        }) 
-    })
-
-
-
-    //async await promise 
-    let response = await axios.get(`https://dog.ceo/api/breed/boxer/images/random/30`)
-    this.setState({
-        dogs:response.data.message 
-    })
-
-
+  getAllTheBeers() {
+    axios.get(`https://ih-beers-api2.herokuapp.com/beers/`).then(allBeers => {
+      //   console.log(allBeers); too see beers
+      this.setState({ allBeers: allBeers.data }); //.data because we have to return data
+    });
   }
+  showBeers = () => {
+    return this.state.allBeers.map(eachBeer => {
+      return (
+        <div>
+          <nav>
+            <ul>
+              <li>
+                <a href="#">Home</a>
+              </li>
+            </ul>
+          </nav>
 
-  showTheBeers = () => {
-    return this.state.beers.map(eachBeer => {
-      return <li>{eachBeer.name}</li>
-    })
-  }
+          <div key={eachBeer._id}>
+            <br />
+            <ul>{eachBeer.name}</ul>
+            <br />
+            <h4>{eachBeer.tagline}</h4>
+            <br />
+            <p>Creator: {eachBeer.contributed_by}</p>
+            <br />
+            <img
+              style={{ width: "65px", height: "150px" }}
+              src={eachBeer.image_url}
+              alt="beer"
+            />{" "}
+            <br />
+          </div>
+        </div>
+      );
+    });
+  };
 
-  showTheDogs = () => {
-    console.log(this.state.dogs)
-    return this.state.dogs.map(eachDog => {
-      return <img src={eachDog} />
-    })
-  }
-
-  render() { //Never set state in here 
-    //console.log('render may happen more than once', this)
-    
-
+  render() {
+    //Never set state in here
     return (
       <div>
-          Axios with React! 
-          {this.showTheDogs()}
-          {this.showTheBeers()}
+        <Header />
+        <Switch>
+          <Route exact path="/" render={props => <HomePage {...props} />} />
+
+          <Route
+            exact
+            path="/beers"
+            render={props => <Beers {...props} showMeBeers={this.showBeers} />}
+          />
+          <Route
+            exact
+            path="/random"
+            render={props => <RandomBeer {...props} />}
+          />
+          <Route exact path="/new" render={props => <NewBeer {...props} />} />
+        </Switch>{" "}
       </div>
     );
   }
 }
-
 export default App;
-
-
