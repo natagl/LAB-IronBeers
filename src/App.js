@@ -8,6 +8,7 @@ import Beers from "./components/beers";
 import RandomBeer from "./components/random-beer";
 import NewBeer from "./components/new-beer";
 import Header from "./components/Header";
+import BeerDetail from "./components/BeerDetail";
 
 class App extends Component {
   state = {
@@ -19,7 +20,7 @@ class App extends Component {
     this.getAllTheBeers();
   }
   getAllTheBeers() {
-    axios.get(`https://ih-beers-api2.herokuapp.com/beers/`).then(allBeers => {
+    axios.get(`https://ih-beers-api2.herokuapp.com/beers`).then(allBeers => {
       //   console.log(allBeers); too see beers
       this.setState({ allBeers: allBeers.data }); //.data because we have to return data
     });
@@ -27,30 +28,19 @@ class App extends Component {
   showBeers = () => {
     return this.state.allBeers.map(eachBeer => {
       return (
-        <div>
-          <nav>
-            <ul>
-              <li>
-                <a href="#">Home</a>
-              </li>
-            </ul>
-          </nav>
-
-          <div key={eachBeer._id}>
-            <br />
+        <div key={eachBeer._id} className="beerCard">
+          <div className="beerText">
             <ul>{eachBeer.name}</ul>
-            <br />
             <h4>{eachBeer.tagline}</h4>
-            <br />
             <p>Creator: {eachBeer.contributed_by}</p>
-            <br />
+          </div>
+          <Link to={`/beer-details/${eachBeer._id}`}>
             <img
               style={{ width: "65px", height: "150px" }}
               src={eachBeer.image_url}
               alt="beer"
-            />{" "}
-            <br />
-          </div>
+            />
+          </Link>
         </div>
       );
     });
@@ -74,7 +64,16 @@ class App extends Component {
             path="/random"
             render={props => <RandomBeer {...props} />}
           />
-          <Route exact path="/new" render={props => <NewBeer {...props} />} />
+          <Route
+            exact
+            path="/new-beer"
+            render={props => <NewBeer {...props} />}
+          />
+          <Route
+            exact
+            path="/beer-details/:beerId"
+            render={props => <BeerDetail {...props} />}
+          ></Route>
         </Switch>{" "}
       </div>
     );

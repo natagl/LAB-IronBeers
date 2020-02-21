@@ -4,19 +4,19 @@ import { Link } from "react-router-dom";
 const HomePage = () => {
   return (
     //{this.showBeers()}
-    <ul>
+    <ul id="home">
       <img src="/images/beers.png"></img>
-      <li>
-        <Link to="/beers">Beers</Link>
-      </li>
+      <br />
+      <Link to="/beers">Beers</Link>
+      <br />
       <img src="/images/new-beer.png"></img>
-      <li>
-        <Link to="/new-beer">New Beer</Link>
-      </li>
+      <br />
+      <Link to="/new-beer">New Beer</Link>
+      <br />
       <img src="/images/random-beer.png"></img>
-      <li>
-        <Link to="/random-beer">Random Beer</Link>
-      </li>
+      <br />
+      <Link to="/random">Random Beer</Link>
+      <br />
     </ul>
   );
 };
